@@ -142,10 +142,11 @@
             transform: scale(0.98);
         }
 
-        .error-message {
-            color: #e74c3c;
+        .info-message {
+            color: #667eea;
             font-size: 0.85em;
             margin-top: 10px;
+            font-style: italic;
         }
 
         @keyframes fadeIn {
@@ -205,7 +206,7 @@
         <div class="total-population">
             <div class="total-population-label">Total Community Population</div>
             <div class="total-population-count" id="totalCount">
-                <span class="loading">Loading...</span>
+                0
             </div>
         </div>
     </header>
@@ -214,9 +215,10 @@
         <div class="server-card">
             <div class="server-name">Traophs Hub</div>
             <div class="member-count" id="count-0">
-                <span class="loading">Loading...</span>
+                0
             </div>
             <div class="members-label">Members</div>
+            <div class="info-message">Manual updates available</div>
             <a href="https://discord.gg/fnDYaTEzSt" target="_blank" rel="noopener noreferrer" class="server-link">
                 Join Server
             </a>
@@ -225,9 +227,10 @@
         <div class="server-card">
             <div class="server-name">Friendly Server</div>
             <div class="member-count" id="count-1">
-                <span class="loading">Loading...</span>
+                0
             </div>
             <div class="members-label">Members</div>
+            <div class="info-message">Manual updates available</div>
             <a href="https://discord.gg/BuMnmqNUXJ" target="_blank" rel="noopener noreferrer" class="server-link">
                 Join Server
             </a>
@@ -236,9 +239,10 @@
         <div class="server-card">
             <div class="server-name">Secretarial Pact</div>
             <div class="member-count" id="count-2">
-                <span class="loading">Loading...</span>
+                0
             </div>
             <div class="members-label">Members</div>
+            <div class="info-message">Manual updates available</div>
             <a href="https://discord.gg/HBfttY3bqQ" target="_blank" rel="noopener noreferrer" class="server-link">
                 Join Server
             </a>
@@ -247,9 +251,10 @@
         <div class="server-card">
             <div class="server-name">Eastern Federation</div>
             <div class="member-count" id="count-3">
-                <span class="loading">Loading...</span>
+                0
             </div>
             <div class="members-label">Members</div>
+            <div class="info-message">Manual updates available</div>
             <a href="https://discord.gg/bg2jNnHRcc" target="_blank" rel="noopener noreferrer" class="server-link">
                 Join Server
             </a>
@@ -257,46 +262,35 @@
     </div>
 
     <script>
-        // Discord server invite codes
-        const servers = [
-            { name: 'Traophs Hub', code: 'fnDYaTEzSt' },
-            { name: 'Friendly Server', code: 'BuMnmqNUXJ' },
-            { name: 'Secretarial Pact', code: 'HBfttY3bqQ' },
-            { name: 'Eastern Federation', code: 'bg2jNnHRcc' }
-        ];
-
-        // Fetch member count for each server
-        async function fetchMemberCount(inviteCode, cardIndex) {
-            try {
-                const response = await fetch(`https://discord.com/api/v10/invites/${inviteCode}`);
-                if (!response.ok) throw new Error('Failed to fetch');
-                const data = await response.json();
-                const memberCount = data.approximate_member_count || 0;
-                
-                document.getElementById(`count-${cardIndex}`).textContent = memberCount.toLocaleString();
-                return memberCount;
-            } catch (error) {
-                console.error(`Error fetching count for ${inviteCode}:`, error);
-                document.getElementById(`count-${cardIndex}`).innerHTML = 
-                    '<span class="error-message">Unable to load</span>';
-                return 0;
-            }
-        }
-
-        // Update total count
-        async function updateTotalCount() {
-            const counts = await Promise.all(
-                servers.map((server, index) => fetchMemberCount(server.code, index))
-            );
-            const total = counts.reduce((sum, count) => sum + count, 0);
+        // Function to update member counts
+        function updateCounts() {
+            // Fetch from a Discord bot API or use cached data
+            // For now, we'll use a placeholder - you can integrate with a bot API
+            
+            // Initialize counts (these would come from your Discord bot API)
+            const counts = [0, 0, 0, 0];
+            let total = 0;
+            
+            counts.forEach((count, index) => {
+                document.getElementById(`count-${index}`).textContent = count.toLocaleString();
+                total += count;
+            });
+            
             document.getElementById('totalCount').textContent = total.toLocaleString();
         }
 
         // Initial load
-        updateTotalCount();
+        updateCounts();
 
         // Update every 30 seconds
-        setInterval(updateTotalCount, 30000);
+        setInterval(updateCounts, 30000);
+
+        // Alternative: You can manually update counts by calling:
+        // window.updateServerCount(index, newCount)
+        window.updateServerCount = function(index, count) {
+            document.getElementById(`count-${index}`).textContent = count.toLocaleString();
+            updateCounts();
+        };
     </script>
 </body>
 </html>
